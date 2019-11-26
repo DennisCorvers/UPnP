@@ -6,8 +6,28 @@
         xmlns:local="clr-namespace:UPnP"
         mc:Ignorable="d"
         Title="UPnP" Height="450" Width="800">
-    <Grid>
-        <Grid/>
-
+    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ShowGridLines="True">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition MinHeight="50" MaxHeight="50" Height="1*"/>
+            <RowDefinition Height="10*"/>
+        </Grid.RowDefinitions>
+        <DockPanel Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Center" 
+                    Margin="5" Background="#FFB8FFC8">
+            <Button Height="35" Width="35" Margin="2">+</Button>
+            <Button Height="35" Width="35" Margin="2">-</Button>
+            <Button Height="35" Width="35" Margin="2" HorizontalAlignment="Right">X</Button>
+        </DockPanel>
+        <DataGrid Name="UPnPGrid" Grid.Row="1" SelectionMode="Single" SelectionUnit="FullRow" Margin="5">
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding Protocol}" Header="TCP/UDP"/>
+                <DataGridTextColumn Binding="{Binding PrivatePort}" Header="Private Port"/>
+                <DataGridTextColumn Binding="{Binding PublicPort}" Header="Public Port"/>
+                <DataGridTextColumn Binding="{Binding Description}" Header="Description"/>
+                <DataGridTextColumn Binding="{Binding Expiration}" Header="Exp. Date"/>
+            </DataGrid.Columns>
+        </DataGrid>
     </Grid>
 </Window>

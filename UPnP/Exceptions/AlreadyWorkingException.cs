@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace UPnP.Objects
+namespace UPnP.Exceptions
 {
     public class AlreadyWorkingException : Exception
     {

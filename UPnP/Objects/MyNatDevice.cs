@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using UPnP.Exceptions;
 
 namespace UPnP.Objects
 {
@@ -42,7 +43,7 @@ namespace UPnP.Objects
             {
                 if (m_currentTask != null)
                 {
-                    if (m_currentTask.Status == TaskStatus.Running 
+                    if (m_currentTask.Status == TaskStatus.Running
                         || m_currentTask.Status == TaskStatus.WaitingForActivation)
                     { throw new AlreadyWorkingException(); }
                 }
@@ -61,9 +62,16 @@ namespace UPnP.Objects
                     PortMapper.Upnp, m_cancellationToken));
         }
 
-        public async Task<IEnumerable<Mapping>> GetAllMappings()
+        public async Task<List<MyNATMapping>> GetAllMappings()
         {
-            return await RegisterTask(m_device.GetAllMappingsAsync());
+            var mappings = await RegisterTask(m_device.GetAllMappingsAsync());
+            if (mappings == null) { return new List<MyNATMapping>(); }
+
+            List<MyNATMapping> returnVal = new List<MyNATMapping>(8);
+            foreach (Mapping map in mappings)
+            { returnVal.Add(new MyNATMapping(map)); }
+
+            return returnVal;
         }
 
         public void CancelPendingRequests()

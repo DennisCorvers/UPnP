@@ -24,19 +24,61 @@ namespace UPnP
     public partial class MainWindow : Window
     {
         private MyNatDevice m_device;
+        private bool m_isBusy;
+        private bool IsBusy
+        {
+            get { return m_isBusy; }
+            set
+            {
+                if (value)
+                { StartBusy(); }
+                else
+                { EndBusy(); }
+                m_isBusy = value;
+            }
+        }
 
         public MainWindow()
         {
+            m_isBusy = false;
             m_device = new MyNatDevice(10000);
             InitializeComponent();
 
-            Setup();
+            Initialize();
         }
 
-        private async void Setup()
+        /// <summary>
+        /// Finds the first NATDevice and fills the data grid with available UPnP bindings.
+        /// </summary>
+        private async void Initialize()
         {
             await GetNatDevice();
-            var doSomethingWithThis = await m_device.GetAllMappings();
+            FillMappings(await m_device.GetAllMappings());
+        }
+
+        /// <summary>
+        /// Blocks the user from making new requests to the NAT device.
+        /// </summary>
+        private void StartBusy()
+        {
+
+        }
+
+        /// <summary>
+        /// Releases the block
+        /// </summary>
+        private void EndBusy()
+        {
+
+        }
+
+        private void FillMappings(List<MyNATMapping> mappings)
+        {
+            UPnPGrid.Items.Clear();
+            if (mappings == null) { return; }
+
+            foreach (MyNATMapping map in mappings)
+            { UPnPGrid.Items.Add(map); }
         }
 
         private async Task GetNatDevice()
@@ -53,7 +95,7 @@ namespace UPnP
                     MessageBoxButton.OK,
                     MessageBoxImage.Error);
             }
+            return;
         }
-
     }
 }
