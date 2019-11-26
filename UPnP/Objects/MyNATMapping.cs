@@ -7,24 +7,32 @@ namespace UPnP.Objects
 {
     public struct MyNATMapping
     {
-        public MyProtocol Protocol
-        { get; }
+#pragma warning disable IDE0032
+        private Protocol m_protocol;
+        private ushort m_privatePort;
+        private ushort m_publicPort;
+        private string m_description;
+        private DateTime m_expiration;
+#pragma warning restore
+
+        public string Protocol
+            => m_protocol.ToString().ToUpper();
         public ushort PrivatePort
-        { get; }
+            => m_privatePort;
         public ushort PublicPort
-        { get; }
+            => m_publicPort;
         public string Description
-        { get; }
-        public DateTime Expiration
-        { get; }
+            => m_description;
+        public string Expiration
+            => m_expiration.ToString("dd/MM/yy   HH:mm:ss");
 
         public MyNATMapping(Mapping natMapping)
         {
-            Protocol = (MyProtocol)(int)natMapping.Protocol;
-            PrivatePort = (ushort)natMapping.PrivatePort;
-            PublicPort = (ushort)natMapping.PublicPort;
-            Description = natMapping.Description;
-            Expiration = natMapping.Expiration;
+            m_protocol = natMapping.Protocol;
+            m_privatePort = (ushort)natMapping.PrivatePort;
+            m_publicPort = (ushort)natMapping.PublicPort;
+            m_description = natMapping.Description;
+            m_expiration = natMapping.Expiration;
         }
     }
 }

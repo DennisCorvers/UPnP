@@ -52,8 +52,12 @@ namespace UPnP
         /// </summary>
         private async void Initialize()
         {
-            await GetNatDevice();
+            IsBusy = true;
+
+            await TryGetNatDevice();
             FillMappings(await m_device.GetAllMappings());
+
+            IsBusy = false;
         }
 
         /// <summary>
@@ -61,7 +65,9 @@ namespace UPnP
         /// </summary>
         private void StartBusy()
         {
-
+            btnAdd.IsEnabled = false;
+            btnDelete.IsEnabled = false;
+            btnRefresh.IsEnabled = false;
         }
 
         /// <summary>
@@ -69,7 +75,9 @@ namespace UPnP
         /// </summary>
         private void EndBusy()
         {
-
+            btnAdd.IsEnabled = true;
+            btnDelete.IsEnabled = true;
+            btnRefresh.IsEnabled = true;
         }
 
         private void FillMappings(List<MyNATMapping> mappings)
@@ -81,7 +89,7 @@ namespace UPnP
             { UPnPGrid.Items.Add(map); }
         }
 
-        private async Task GetNatDevice()
+        private async Task TryGetNatDevice()
         {
             try
             { await m_device.FindDevice(); }

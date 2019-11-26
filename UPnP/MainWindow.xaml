@@ -16,17 +16,18 @@
         </Grid.RowDefinitions>
         <DockPanel Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Center" 
                     Margin="5" Background="#FFB8FFC8">
-            <Button Height="35" Width="35" Margin="2">+</Button>
-            <Button Height="35" Width="35" Margin="2">-</Button>
-            <Button Height="35" Width="35" Margin="2" HorizontalAlignment="Right">X</Button>
+            <Button Name="btnRefresh" Height="35" Width="35" Margin="2">Rfsh</Button>
+            <Button Name="btnAdd" Height="35" Width="35" Margin="2">Add</Button>
+            <Button Name="btnDelete" Height="35" Width="35" Margin="2">Del</Button>
+            <Button Name="btnCancel" Height="35" Width="35" Margin="2" HorizontalAlignment="Right">Can</Button>
         </DockPanel>
         <DataGrid Name="UPnPGrid" Grid.Row="1" SelectionMode="Single" SelectionUnit="FullRow" Margin="5">
             <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding Protocol}" Header="TCP/UDP"/>
-                <DataGridTextColumn Binding="{Binding PrivatePort}" Header="Private Port"/>
-                <DataGridTextColumn Binding="{Binding PublicPort}" Header="Public Port"/>
-                <DataGridTextColumn Binding="{Binding Description}" Header="Description"/>
-                <DataGridTextColumn Binding="{Binding Expiration}" Header="Exp. Date"/>
+                <DataGridTextColumn Width="1*" Binding="{Binding Protocol}" Header="TCP/UDP"/>
+                <DataGridTextColumn Width="1*" Binding="{Binding PrivatePort}" Header="Private Port"/>
+                <DataGridTextColumn Width="1*" Binding="{Binding PublicPort}" Header="Public Port"/>
+                <DataGridTextColumn Width="1*" Binding="{Binding Description}" Header="Description"/>
+                <DataGridTextColumn Width="1*" Binding="{Binding Expiration}" Header="Exp. Date"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>
