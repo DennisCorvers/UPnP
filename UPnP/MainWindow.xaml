@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:UPnP"
         mc:Ignorable="d"
-        Title="UPnP" Height="450" Width="800">
+        Title="UPnP" MinWidth="345" MinHeight="200" Height="450" Width="700">
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ShowGridLines="True">
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
@@ -16,18 +16,19 @@
         </Grid.RowDefinitions>
         <DockPanel Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Center" 
                     Margin="5" Background="#FFB8FFC8">
-            <Button Name="btnRefresh" Height="35" Width="35" Margin="2">Rfsh</Button>
-            <Button Name="btnAdd" Height="35" Width="35" Margin="2">Add</Button>
-            <Button Name="btnDelete" Height="35" Width="35" Margin="2">Del</Button>
-            <Button Name="btnCancel" Height="35" Width="35" Margin="2" HorizontalAlignment="Right">Can</Button>
+            <Button Name="btnRefresh" Click="btnRefresh_Click" Height="35" Width="35" Margin="2">Rfsh</Button>
+            <Button Name="btnAdd"     Click="btnAdd_Click"     Height="35" Width="35" Margin="2">Add</Button>
+            <Button Name="btnDelete"  Click="btnDelete_Click"  Height="35" Width="35" Margin="2">Del</Button>
+            <Button Name="btnCancel"  Click="btnCancel_Click"  Height="35" Width="35" Margin="2" HorizontalAlignment="Right">Can</Button>
         </DockPanel>
         <DataGrid Name="UPnPGrid" Grid.Row="1" SelectionMode="Single" SelectionUnit="FullRow" Margin="5">
             <DataGrid.Columns>
-                <DataGridTextColumn Width="1*" Binding="{Binding Protocol}" Header="TCP/UDP"/>
-                <DataGridTextColumn Width="1*" Binding="{Binding PrivatePort}" Header="Private Port"/>
-                <DataGridTextColumn Width="1*" Binding="{Binding PublicPort}" Header="Public Port"/>
+                <DataGridTextColumn MinWidth="65"  MaxWidth="65"  Width="1*" Binding="{Binding Protocol}" Header="TCP/UDP"/>
+                <DataGridTextColumn MinWidth="100" MaxWidth="100" Width="1*" Binding="{Binding IPAddress}" Header="IP Address"/>
+                <DataGridTextColumn MinWidth="75"  MaxWidth="75"  Width="1*" Binding="{Binding PrivatePort}" Header="Private Port"/>
+                <DataGridTextColumn MinWidth="75"  MaxWidth="75"  Width="1*" Binding="{Binding PublicPort}" Header="Public Port"/>
                 <DataGridTextColumn Width="1*" Binding="{Binding Description}" Header="Description"/>
-                <DataGridTextColumn Width="1*" Binding="{Binding Expiration}" Header="Exp. Date"/>
+                <DataGridTextColumn MinWidth="75"  MaxWidth="125" Width="1*" Binding="{Binding Expiration}" Header="Exp. Date"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

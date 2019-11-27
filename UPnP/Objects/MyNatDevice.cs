@@ -16,11 +16,14 @@ namespace UPnP.Objects
         private NatDevice m_device;
         private CancellationTokenSource m_cancellationToken;
 
+        private List<MyNatMapping> m_mappings;
+
         public bool HasDevice
             => m_device != null;
 
         public MyNatDevice(int timeout)
         {
+            m_mappings = new List<MyNatMapping>(8);
             m_timeout = timeout;
             m_discoverer = new NatDiscoverer();
             m_cancellationToken = new CancellationTokenSource(m_timeout);
@@ -33,16 +36,32 @@ namespace UPnP.Objects
             m_device = await m_discoverer.DiscoverDeviceAsync(PortMapper.Upnp, m_cancellationToken);
         }
 
-        public async Task<List<MyNATMapping>> GetAllMappings()
+        public async Task<List<MyNatMapping>> GetAllMappings()
         {
+            if(!HasDevice) { throw new NoNatDeviceException(); }
+
+            m_mappings.Clear();
+
             var mappings = await m_device.GetAllMappingsAsync();
-            if (mappings == null) { return new List<MyNATMapping>(); }
+            if (mappings == null) { return m_mappings; }
 
-            List<MyNATMapping> returnVal = new List<MyNATMapping>(8);
-            foreach (Mapping map in mappings)
-            { returnVal.Add(new MyNATMapping(map)); }
+            foreach (var map in mappings)
+            { m_mappings.Add(new MyNatMapping(map)); }
 
-            return returnVal;
+            return m_mappings;
+        }
+
+        public async Task AddMapping(Mapping mapping)
+        {
+            if(!HasDevice) { throw new NoNatDeviceException(); }
+
+            await m_device.CreatePortMapAsync(mapping);
+        }
+        public async Task RemoveMapping(Mapping mapping)
+        {
+            if (!HasDevice) { throw new NoNatDeviceException(); }
+
+            await m_device.DeletePortMapAsync(mapping);
         }
 
         public void CancelPendingRequests()

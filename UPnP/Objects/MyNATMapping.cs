@@ -1,38 +1,39 @@
 ﻿using Open.Nat;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Text;
 
 namespace UPnP.Objects
 {
-    public struct MyNATMapping
+    public struct MyNatMapping
     {
 #pragma warning disable IDE0032
-        private Protocol m_protocol;
-        private ushort m_privatePort;
-        private ushort m_publicPort;
-        private string m_description;
-        private DateTime m_expiration;
+        private Mapping m_mapping;
 #pragma warning restore
 
         public string Protocol
-            => m_protocol.ToString().ToUpper();
-        public ushort PrivatePort
-            => m_privatePort;
-        public ushort PublicPort
-            => m_publicPort;
+            => m_mapping.Protocol.ToString().ToUpper();
+        public IPAddress IPAddress
+            => m_mapping.PrivateIP;
+        public int PrivatePort
+            => m_mapping.PrivatePort;
+        public int PublicPort
+            => m_mapping.PublicPort;
         public string Description
-            => m_description;
+            => m_mapping.Description;
         public string Expiration
-            => m_expiration.ToString("dd/MM/yy   HH:mm:ss");
+            => m_mapping.Expiration.ToString("dd/MM/yy   HH:mm:ss");
 
-        public MyNATMapping(Mapping natMapping)
+        public Mapping Mapping
         {
-            m_protocol = natMapping.Protocol;
-            m_privatePort = (ushort)natMapping.PrivatePort;
-            m_publicPort = (ushort)natMapping.PublicPort;
-            m_description = natMapping.Description;
-            m_expiration = natMapping.Expiration;
+            get => m_mapping;
+            private set => m_mapping = value;
+        }
+
+        public MyNatMapping(Mapping natMapping)
+        {
+            m_mapping = natMapping;
         }
     }
 }
