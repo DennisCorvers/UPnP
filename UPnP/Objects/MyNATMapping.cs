@@ -6,7 +6,7 @@ using System.Text;
 
 namespace UPnP.Objects
 {
-    public struct MyNatMapping
+    internal struct MyNatMapping
     {
 #pragma warning disable IDE0032
         private Mapping m_mapping;
@@ -33,6 +33,9 @@ namespace UPnP.Objects
 
         public MyNatMapping(Mapping natMapping)
         {
+            if (natMapping == null)
+            { throw new ArgumentNullException("natMapping"); }
+
             m_mapping = natMapping;
         }
     }

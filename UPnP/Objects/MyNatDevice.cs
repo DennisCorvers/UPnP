@@ -1,44 +1,71 @@
 ﻿using Open.Nat;
-using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using UPnP.Exceptions;
+using UPnP.Utils;
 
 namespace UPnP.Objects
 {
-    public class MyNatDevice
+    internal static class MyNatDevice
     {
-        private readonly int m_timeout;
+        public const int Timeout = 5000;
 
-        private NatDiscoverer m_discoverer;
-        private NatDevice m_device;
-        private CancellationTokenSource m_cancellationToken;
+        private static NatDiscoverer m_discoverer;
+        private static NatDevice m_device; //DeviceInfo > LocalDevice
+        private static CancellationTokenSource m_cancellationToken;
 
-        private List<MyNatMapping> m_mappings;
+        private static List<MyNatMapping> m_mappings;
 
-        public bool HasDevice
+        public static bool HasDevice
             => m_device != null;
+        public static IPAddress PublicIP
+        { private get; set; }
 
-        public MyNatDevice(int timeout)
+        public static IPEndPoint DeviceEndpoint
         {
-            m_mappings = new List<MyNatMapping>(8);
-            m_timeout = timeout;
-            m_discoverer = new NatDiscoverer();
-            m_cancellationToken = new CancellationTokenSource(m_timeout);
+            get
+            {
+                if (m_device == null)
+                    return null;
+                return LocalAddress.GetEndpoint(m_device);
+            }
+        }
+        public static IPAddress LocalIP
+        {
+            get
+            {
+                if (m_device == null)
+                    return null;
+                return LocalAddress.GetLocalIPAddress(m_device);
+            }
         }
 
-        public async Task FindDevice()
+
+        static MyNatDevice()
+        {
+            m_mappings = new List<MyNatMapping>(8);
+            m_discoverer = new NatDiscoverer();
+            m_cancellationToken = new CancellationTokenSource(Timeout);
+        }
+
+        public static async Task FindDevice()
         {
             if (HasDevice) { return; }
 
             m_device = await m_discoverer.DiscoverDeviceAsync(PortMapper.Upnp, m_cancellationToken);
+
+            if (m_device == null)
+                PublicIP = IPAddress.Any;
+            else
+                PublicIP = await m_device.GetExternalIPAsync();
         }
 
-        public async Task<List<MyNatMapping>> GetAllMappings()
+        public static async Task<List<MyNatMapping>> GetAllMappings()
         {
-            if(!HasDevice) { throw new NoNatDeviceException(); }
+            if (!HasDevice) { throw new NoNatDeviceException(); }
 
             m_mappings.Clear();
 
@@ -51,20 +78,20 @@ namespace UPnP.Objects
             return m_mappings;
         }
 
-        public async Task AddMapping(Mapping mapping)
+        public static async Task AddMapping(Mapping mapping)
         {
-            if(!HasDevice) { throw new NoNatDeviceException(); }
+            if (!HasDevice) { throw new NoNatDeviceException(); }
 
             await m_device.CreatePortMapAsync(mapping);
         }
-        public async Task RemoveMapping(Mapping mapping)
+        public static async Task RemoveMapping(Mapping mapping)
         {
             if (!HasDevice) { throw new NoNatDeviceException(); }
 
             await m_device.DeletePortMapAsync(mapping);
         }
 
-        public void CancelPendingRequests()
+        public static void CancelPendingRequests()
         {
             if (m_cancellationToken != null)
             { m_cancellationToken.Cancel(); }
