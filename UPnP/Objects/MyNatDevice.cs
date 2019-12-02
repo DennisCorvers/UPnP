@@ -9,22 +9,19 @@ using UPnP.Utils;
 
 namespace UPnP.Objects
 {
-    internal static class MyNatDevice
+    internal sealed class MyNatDevice
     {
         public const int Timeout = 5000;
 
-        private static NatDiscoverer m_discoverer;
-        private static NatDevice m_device; //DeviceInfo > LocalDevice
-        private static CancellationTokenSource m_cancellationToken;
+        private NatDiscoverer m_discoverer;
+        private NatDevice m_device;
+        private CancellationTokenSource m_cancellationToken;
+        private List<MyNatMapping> m_mappings;
 
-        private static List<MyNatMapping> m_mappings;
-
-        public static bool HasDevice
-            => m_device != null;
-        public static IPAddress PublicIP
+        public IPAddress PublicIP
         { private get; set; }
 
-        public static IPEndPoint DeviceEndpoint
+        public IPEndPoint DeviceEndpoint
         {
             get
             {
@@ -33,7 +30,7 @@ namespace UPnP.Objects
                 return LocalAddress.GetEndpoint(m_device);
             }
         }
-        public static IPAddress LocalIP
+        public IPAddress LocalIP
         {
             get
             {
@@ -43,15 +40,32 @@ namespace UPnP.Objects
             }
         }
 
+        public static bool HasDevice
+            => Instance.m_device != null;
+        private static MyNatDevice m_instance = null;
+        private static readonly object m_lock = new object();
 
-        static MyNatDevice()
+        public static MyNatDevice Instance
+        {
+            get
+            {
+                lock (m_lock)
+                {
+                    if (m_instance == null)
+                        m_instance = new MyNatDevice();
+                    return m_instance;
+                }
+            }
+        }
+
+        private MyNatDevice()
         {
             m_mappings = new List<MyNatMapping>(8);
             m_discoverer = new NatDiscoverer();
             m_cancellationToken = new CancellationTokenSource(Timeout);
         }
 
-        public static async Task FindDevice()
+        public async Task FindDevice()
         {
             if (HasDevice) { return; }
 
@@ -62,8 +76,7 @@ namespace UPnP.Objects
             else
                 PublicIP = await m_device.GetExternalIPAsync();
         }
-
-        public static async Task<List<MyNatMapping>> GetAllMappings()
+        public async Task<List<MyNatMapping>> GetAllMappings()
         {
             if (!HasDevice) { throw new NoNatDeviceException(); }
 
@@ -78,20 +91,20 @@ namespace UPnP.Objects
             return m_mappings;
         }
 
-        public static async Task AddMapping(Mapping mapping)
+        public async Task AddMapping(Mapping mapping)
         {
             if (!HasDevice) { throw new NoNatDeviceException(); }
 
             await m_device.CreatePortMapAsync(mapping);
         }
-        public static async Task RemoveMapping(Mapping mapping)
+        public async Task RemoveMapping(Mapping mapping)
         {
             if (!HasDevice) { throw new NoNatDeviceException(); }
 
             await m_device.DeletePortMapAsync(mapping);
         }
 
-        public static void CancelPendingRequests()
+        public void CancelPendingRequests()
         {
             if (m_cancellationToken != null)
             { m_cancellationToken.Cancel(); }

@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using UPnP.Exceptions;
+using UPnP.Forms;
 using UPnP.Objects;
 
 namespace UPnP
@@ -57,8 +58,6 @@ namespace UPnP
             btnRefresh.IsEnabled = true;
         }
 
-
-
         private void FillMappings(List<MyNatMapping> mappings)
         {
             UPnPGrid.Items.Clear();
@@ -70,48 +69,30 @@ namespace UPnP
 
         private async Task AddMapping(MyNatMapping mapping)
         {
-            if (!MyNatDevice.HasDevice)
-                MessageBox.Show(
-                "No NAT device available.\nTry refreshing first.",
-                "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            else
-                try
-                {
-                    //await m_device.AddMapping(mapping.Mapping);
-                    await RefreshMappings();
-                }
-                catch
-                {
-                    //TODO
-                    throw new Exception();
-                }
-
-            IsBusy = false;
+            try
+            {
+                //await m_device.AddMapping(mapping.Mapping);
+                await RefreshMappings();
+            }
+            catch (NoNatDeviceException)
+            { HandleNoNatDeviceException(); }
         }
         private async Task RemoveMapping(MyNatMapping mapping)
         {
-            if (!MyNatDevice.HasDevice)
-                MessageBox.Show(
-                "No NAT device available.\nTry refreshing first.",
-                "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            else
-                try
-                {
-                    //await m_device.RemoveMapping(mapping.Mapping);
-                    await RefreshMappings();
-                }
-                catch
-                {
-                    //TODO
-                    throw new Exception();
-                }
+            try
+            {
+                //await m_device.RemoveMapping(mapping.Mapping);
+                await RefreshMappings();
+            }
+            catch (NoNatDeviceException)
+            { HandleNoNatDeviceException(); }
         }
         private async Task RefreshMappings()
         {
             if (!MyNatDevice.HasDevice)
             {
                 try
-                { await MyNatDevice.FindDevice(); }
+                { await MyNatDevice.Instance.FindDevice(); }
                 catch
                 {
                     MessageBox.Show(
@@ -123,7 +104,7 @@ namespace UPnP
 
             List<MyNatMapping> mappings;
             try
-            { mappings = await MyNatDevice.GetAllMappings(); }
+            { mappings = await MyNatDevice.Instance.GetAllMappings(); }
             catch (NoNatDeviceException)
             {
                 MessageBox.Show(
@@ -163,6 +144,13 @@ namespace UPnP
             }
         }
         private void btnCancel_Click(object sender, RoutedEventArgs e)
-        { MyNatDevice.CancelPendingRequests(); }
+        { MyNatDevice.Instance.CancelPendingRequests(); }
+
+        private void HandleNoNatDeviceException()
+        {
+            MessageBox.Show(
+                "No NAT device available.\nTry refreshing first.",
+                "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
     }
 }

@@ -21,7 +21,7 @@
             <Button Name="btnDelete"  Click="btnDelete_Click"  Height="35" Width="35" Margin="2">Del</Button>
             <Button Name="btnCancel"  Click="btnCancel_Click"  Height="35" Width="35" Margin="2" HorizontalAlignment="Right">Can</Button>
         </DockPanel>
-        <DataGrid Name="UPnPGrid" Grid.Row="1" SelectionMode="Single" SelectionUnit="FullRow" Margin="5">
+        <DataGrid Name="UPnPGrid" IsReadOnly="true" Grid.Row="1" SelectionMode="Single" SelectionUnit="FullRow" Margin="5">
             <DataGrid.Columns>
                 <DataGridTextColumn MinWidth="65"  MaxWidth="65"  Width="1*" Binding="{Binding Protocol}" Header="TCP/UDP"/>
                 <DataGridTextColumn MinWidth="100" MaxWidth="100" Width="1*" Binding="{Binding IPAddress}" Header="IP Address"/>
