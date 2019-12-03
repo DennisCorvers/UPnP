@@ -16,10 +16,10 @@
         </Grid.RowDefinitions>
         <DockPanel Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Center" 
                     Margin="5" Background="#FFB8FFC8">
-            <Button Name="btnRefresh" Click="btnRefresh_Click" Height="35" Width="35" Margin="2">Rfsh</Button>
-            <Button Name="btnAdd"     Click="btnAdd_Click"     Height="35" Width="35" Margin="2">Add</Button>
-            <Button Name="btnDelete"  Click="btnDelete_Click"  Height="35" Width="35" Margin="2">Del</Button>
-            <Button Name="btnCancel"  Click="btnCancel_Click"  Height="35" Width="35" Margin="2" HorizontalAlignment="Right">Can</Button>
+            <Button Name="btnRefresh" Click="BtnRefresh_Click" Height="35" Width="35" Margin="2">Rfsh</Button>
+            <Button Name="btnAdd"     Click="BtnAdd_Click"     Height="35" Width="35" Margin="2">Add</Button>
+            <Button Name="btnDelete"  Click="BtnDelete_Click"  Height="35" Width="35" Margin="2">Del</Button>
+            <Button Name="btnCancel"  Click="BtnCancel_Click"  Height="35" Width="35" Margin="2" HorizontalAlignment="Right">Can</Button>
         </DockPanel>
         <DataGrid Name="UPnPGrid" IsReadOnly="true" Grid.Row="1" SelectionMode="Single" SelectionUnit="FullRow" Margin="5">
             <DataGrid.Columns>

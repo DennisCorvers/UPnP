@@ -13,10 +13,10 @@ namespace UPnP.Objects
     {
         public const int Timeout = 5000;
 
-        private NatDiscoverer m_discoverer;
         private NatDevice m_device;
-        private CancellationTokenSource m_cancellationToken;
-        private List<MyNatMapping> m_mappings;
+        private readonly NatDiscoverer m_discoverer;
+        private readonly CancellationTokenSource m_cancellationToken;
+        private readonly List<MyNatMapping> m_mappings;
 
         public IPAddress PublicIP
         { private get; set; }

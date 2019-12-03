@@ -14,26 +14,22 @@ namespace UPnP
     /// </summary>
     public partial class MainWindow : Window
     {
-        private bool m_isBusy;
         private bool IsBusy
         {
-            get { return m_isBusy; }
             set
             {
                 if (value)
                 { StartBusy(); }
                 else
                 { EndBusy(); }
-                m_isBusy = value;
             }
         }
 
         public MainWindow()
         {
-            m_isBusy = false;
             InitializeComponent();
 
-            btnRefresh_Click(null, null);
+            BtnRefresh_Click(null, null);
         }
 
         /// <summary>
@@ -115,20 +111,20 @@ namespace UPnP
             FillMappings(mappings);
         }
 
-        private async void btnRefresh_Click(object sender, RoutedEventArgs e)
+        private async void BtnRefresh_Click(object sender, RoutedEventArgs e)
         {
             IsBusy = true;
             await RefreshMappings();
             IsBusy = false;
         }
 
-        private async void btnAdd_Click(object sender, RoutedEventArgs e)
+        private async void BtnAdd_Click(object sender, RoutedEventArgs e)
         {
             IsBusy = true;
             //var selection = UPnPGrid.SelectedItem;
             IsBusy = false;
         }
-        private async void btnDelete_Click(object sender, RoutedEventArgs e)
+        private async void BtnDelete_Click(object sender, RoutedEventArgs e)
         {
             var selection = UPnPGrid.SelectedItem;
             if (selection == null)
@@ -143,14 +139,14 @@ namespace UPnP
                 IsBusy = false;
             }
         }
-        private void btnCancel_Click(object sender, RoutedEventArgs e)
+        private void BtnCancel_Click(object sender, RoutedEventArgs e)
         { MyNatDevice.Instance.CancelPendingRequests(); }
 
         private void HandleNoNatDeviceException()
         {
             MessageBox.Show(
                 "No NAT device available.\nTry refreshing first.",
-                "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
         }
     }
 }
