@@ -1,10 +1,8 @@
 ﻿using Open.Nat;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using UPnP.Exceptions;
 using UPnP.Utils;
 
 namespace UPnP.Objects
@@ -78,11 +76,16 @@ namespace UPnP.Objects
         }
         public async Task<List<MyNatMapping>> GetAllMappings()
         {
-            if (!HasDevice) { throw new NoNatDeviceException(); }
+            if (!HasDevice) { throw new NatDeviceNotFoundException(); }
 
             m_mappings.Clear();
 
-            var mappings = await m_device.GetAllMappingsAsync();
+            IEnumerable<Mapping> mappings;
+            try
+            { mappings = await m_device.GetAllMappingsAsync(); }
+            catch (NatDeviceNotFoundException e)
+            { m_device = null; throw e; }
+
             if (mappings == null) { return m_mappings; }
 
             foreach (var map in mappings)
@@ -93,15 +96,21 @@ namespace UPnP.Objects
 
         public async Task AddMapping(Mapping mapping)
         {
-            if (!HasDevice) { throw new NoNatDeviceException(); }
+            if (!HasDevice) { throw new NatDeviceNotFoundException(); }
 
-            await m_device.CreatePortMapAsync(mapping);
+            try
+            { await m_device.CreatePortMapAsync(mapping); }
+            catch (NatDeviceNotFoundException e)
+            { m_device = null; throw e; }
         }
         public async Task RemoveMapping(Mapping mapping)
         {
-            if (!HasDevice) { throw new NoNatDeviceException(); }
+            if (!HasDevice) { throw new NatDeviceNotFoundException(); }
 
-            await m_device.DeletePortMapAsync(mapping);
+            try
+            { await m_device.DeletePortMapAsync(mapping); }
+            catch (NatDeviceNotFoundException e)
+            { m_device = null; throw e; }
         }
 
         public void CancelPendingRequests()

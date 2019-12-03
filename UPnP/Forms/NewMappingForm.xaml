@@ -4,9 +4,74 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:UPnP.Forms"
+        xmlns:components="clr-namespace:UPnP.Forms.Components"
         mc:Ignorable="d"
-        Title="NewMappingForm" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+        Title="NewMappingForm" Height="300" Width="500"
+            MinWidth="370" MinHeight="280">
+
+
+    <StackPanel Orientation="Vertical" Margin="10,20,10,10">
+        <Grid Height="60">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="80"/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="40"/>
+                <ColumnDefinition Width="30"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="28"/>
+                <RowDefinition Height="28"/>
+            </Grid.RowDefinitions>
+
+            <Label Grid.Column="0" Grid.Row="0" VerticalAlignment="Center">Public Port:</Label>
+            <Label Grid.Column="0" Grid.Row="1" VerticalAlignment="Center">Private Port:</Label>
+
+            <TextBox Grid.Column="1" Grid.Row="0" VerticalAlignment="Center" Name="TbPublicPort" 
+                     PreviewTextInput="OnPreviewTextInput" MaxLength="5" Width="100" HorizontalAlignment="Left"/>
+            <TextBox Grid.Column="1" Grid.Row="1" VerticalAlignment="Center" Name="TbPrivatePort" 
+                     PreviewTextInput="OnPreviewTextInput" MaxLength="5" Width="100" HorizontalAlignment="Left"/>
+
+            <CheckBox Grid.Column="3" Grid.Row="0" VerticalAlignment="Center" 
+                      Name="CbTCP" IsChecked="True"/>
+            <CheckBox Grid.Column="3" Grid.Row="1" VerticalAlignment="Center" 
+                      Name="CbUDP" IsChecked="True"/>
+
+            <Label Grid.Column="2" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Right">TCP</Label>
+            <Label Grid.Column="2" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Right">UDP</Label>
+        </Grid>
+        <Grid Margin="0,20,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="120"/>
+                <ColumnDefinition Width="200"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+            <Label Grid.Column="0" Grid.Row="0" VerticalAlignment="Center">Lifetime:</Label>
+            <Label Grid.Column="0" Grid.Row="1" VerticalAlignment="Center">Private IP Address:</Label>
+            <Label Grid.Column="0" Grid.Row="2" VerticalAlignment="Center">Description:</Label>
+
+            <TextBox Grid.Column="1" Grid.Row="0" VerticalAlignment="Center" Name="TbLifetime" 
+                     MaxLength="10" PreviewTextInput="OnPreviewTextInput"/>
+            <components:IPTextBox Grid.Column="1" Grid.Row="1" x:Name="TbPrivateIP"/>
+            <TextBox Grid.Column="1" Grid.Row="2" VerticalAlignment="Center" Name="TbDescription"
+                     MaxLength="50"/>
+        </Grid>
+        <Grid Margin="0,35,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Button Name="BtnAddMapping" Grid.Column="0" Width="100" 
+                    Click="BtnAddMapping_Click">Add Mapping</Button>
+            <Button Name="BtnCancel" Grid.Column="1" Width="100" 
+                    Click="BtnCancel_Click">Cancel</Button>
+        </Grid>
+    </StackPanel>
 </Window>

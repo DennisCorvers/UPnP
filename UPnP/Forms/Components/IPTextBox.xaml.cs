@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -19,10 +20,10 @@ namespace UPnP.Forms.Components
             get
             {
                 return string.Format("{0}.{1}.{2}.{3}",
-                    Segment1,
-                    Segment2,
-                    Segment3,
-                    Segment4);
+                    Segment1.Text == string.Empty ? "0" : Segment1.Text,
+                    Segment2.Text == string.Empty ? "0" : Segment2.Text,
+                    Segment3.Text == string.Empty ? "0" : Segment3.Text,
+                    Segment4.Text == string.Empty ? "0" : Segment4.Text);
             }
             set
             {

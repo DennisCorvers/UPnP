@@ -1,10 +1,7 @@
-﻿using System;
+﻿using Open.Nat;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using UPnP.Exceptions;
-using UPnP.Forms;
 using UPnP.Objects;
 
 namespace UPnP
@@ -70,7 +67,7 @@ namespace UPnP
                 //await m_device.AddMapping(mapping.Mapping);
                 await RefreshMappings();
             }
-            catch (NoNatDeviceException)
+            catch (NatDeviceNotFoundException)
             { HandleNoNatDeviceException(); }
         }
         private async Task RemoveMapping(MyNatMapping mapping)
@@ -80,7 +77,7 @@ namespace UPnP
                 //await m_device.RemoveMapping(mapping.Mapping);
                 await RefreshMappings();
             }
-            catch (NoNatDeviceException)
+            catch (NatDeviceNotFoundException)
             { HandleNoNatDeviceException(); }
         }
         private async Task RefreshMappings()
@@ -89,7 +86,7 @@ namespace UPnP
             {
                 try
                 { await MyNatDevice.Instance.FindDevice(); }
-                catch
+                catch (NatDeviceNotFoundException)
                 {
                     MessageBox.Show(
                         "Unable to discover NAT Device.\nMake sure UPnP is enabled on your router!",
@@ -101,7 +98,7 @@ namespace UPnP
             List<MyNatMapping> mappings;
             try
             { mappings = await MyNatDevice.Instance.GetAllMappings(); }
-            catch (NoNatDeviceException)
+            catch (NatDeviceNotFoundException)
             {
                 MessageBox.Show(
                     "Unable to get UPnP mappings.\nNo NAT device available.",
