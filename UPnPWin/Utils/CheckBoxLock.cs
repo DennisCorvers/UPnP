@@ -4,7 +4,7 @@ using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace UPnP.Utils
+namespace UPnPWin.Utils
 {
     /// <summary>
     /// Keeps at least one checkbox locked on "Checked"

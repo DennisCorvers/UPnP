@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Text;
 
-namespace UPnP.Objects
+namespace UPnPWin.Objects
 {
     internal struct MyNatMapping
     {

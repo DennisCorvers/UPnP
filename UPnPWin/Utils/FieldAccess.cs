@@ -4,7 +4,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Text;
 
-namespace UPnP.Utils
+namespace UPnPWin.Utils
 {
     internal static class FieldAccess
     {

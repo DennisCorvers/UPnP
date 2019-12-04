@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Input;
 
-namespace UPnP.Utils
+namespace UPnPWin.Utils
 {
     internal static class InputConstraints
     {

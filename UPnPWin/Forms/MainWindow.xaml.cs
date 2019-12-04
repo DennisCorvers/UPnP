@@ -1,14 +1,23 @@
 ﻿using Open.Nat;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using UPnP.Forms;
-using UPnP.Objects;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
+using UPnPWin.Objects;
+using UPnPWin.Utils;
 
-namespace UPnP
+namespace UPnPWin.Forms
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -77,15 +86,15 @@ namespace UPnP
                 return new List<MyNatMapping>();
             }
         }
-        private async Task RemoveMapping(MyNatMapping mapping)
+        private async Task<bool> RemoveMapping(List<Mapping> mappings)
         {
-            try
-            {
-                await MyNatDevice.Instance.RemoveMapping(mapping.Mapping);
-                FillMappings(await GetMappings());
-            }
+            try { await MyNatDevice.Instance.RemoveMappings(mappings); }
             catch (NatDeviceNotFoundException)
-            { HandleNoNatDeviceException(); }
+            {
+                HandleNoNatDeviceException();
+                return false;
+            }
+            return true;
         }
 
         private async Task RefreshUI()
@@ -97,7 +106,7 @@ namespace UPnP
             SetIPLabel(labPrivateIP, device.LocalIP);
             SetIPLabel(labDeviceIP, device.DeviceEndpoint.Address);
 
-            //FillMappings(await GetMappings());
+            FillMappings(await GetMappings());
         }
         private async void BtnRefresh_Click(object sender, RoutedEventArgs e)
         {
@@ -118,8 +127,8 @@ namespace UPnP
         }
         private async void BtnDelete_Click(object sender, RoutedEventArgs e)
         {
-            var selection = UPnPGrid.SelectedItem;
-            if (selection == null)
+            var selection = UPnPGrid.SelectedItems;
+            if (selection.Count == 0)
             {
                 MessageBox.Show("No mapping selected.", "Warning",
                     MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -127,12 +136,26 @@ namespace UPnP
             else
             {
                 SetBusy(true);
-                await RemoveMapping((MyNatMapping)selection);
+                //MyNatDevice.TEST();
+
+                if (await RemoveMapping(GetMappings(selection)))
+                    FillMappings(await GetMappings());
+
                 SetBusy(false);
             }
+            UPnPGrid.UnselectAllCells();
         }
         private void BtnCancel_Click(object sender, RoutedEventArgs e)
         { MyNatDevice.Instance.CancelPendingRequests(); }
+
+        private List<Mapping> GetMappings(IList selection)
+        {
+            List<Mapping> returnValue = new List<Mapping>(selection.Count);
+            foreach (var item in selection)
+                returnValue.Add(((MyNatMapping)item).Mapping);
+
+            return returnValue;
+        }
 
         private void HandleNoNatDeviceException()
         {

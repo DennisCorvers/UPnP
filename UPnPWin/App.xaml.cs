@@ -6,12 +6,18 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace UPnP
+namespace UPnPWin
 {
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
     public partial class App : Application
     {
+#if DEBUG
+        public App()
+        {
+            Open.Nat.NatDiscoverer.TraceSource.Switch.Level = System.Diagnostics.SourceLevels.All;
+        }
+#endif
     }
 }

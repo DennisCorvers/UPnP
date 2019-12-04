@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace UPnP.Forms.Components
+namespace UPnPWin.Forms.Components
 {
     public partial class IPTextBox : UserControl
     {

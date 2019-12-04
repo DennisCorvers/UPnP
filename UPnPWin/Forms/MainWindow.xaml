@@ -1,4 +1,4 @@
-﻿<Window x:Class="UPnP.MainWindow"
+﻿<Window x:Class="UPnPWin.Forms.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -46,7 +46,7 @@
             </DockPanel>
         </Grid>
         <!--UPnP Mapping Grid-->
-        <DataGrid Name="UPnPGrid" IsReadOnly="true" Grid.Row="2" SelectionMode="Single" SelectionUnit="FullRow" Margin="5">
+        <DataGrid Name="UPnPGrid" IsReadOnly="true" Grid.Row="2" SelectionMode="Extended"  SelectionUnit="FullRow" Margin="5">
             <DataGrid.Columns>
                 <DataGridTextColumn MinWidth="65"  MaxWidth="65"  Width="1*" Binding="{Binding Protocol}" Header="TCP/UDP"/>
                 <DataGridTextColumn MinWidth="100" MaxWidth="100" Width="1*" Binding="{Binding IPAddress}" Header="IP Address"/>
@@ -58,3 +58,4 @@
         </DataGrid>
     </Grid>
 </Window>
+

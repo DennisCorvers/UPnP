@@ -1,14 +1,15 @@
 ﻿using Open.Nat;
 using System;
-using System.Diagnostics;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Reflection;
+using System.Text;
 using System.Threading.Tasks;
-using UPnP.Objects;
 
-namespace UPnP.Utils
+namespace UPnPWin.Utils
 {
-    internal static class LocalAddress
+    internal static class AddressReflection
     {
         private const string UpnpNatDeviceName = "Open.Nat.UpnpNatDevice";
         private const string UpnpNatDeviceInfoName = "Open.Nat.UpnpNatDeviceInfo";
@@ -21,7 +22,7 @@ namespace UPnP.Utils
         private static Func<object, IPAddress> GetPrivateIPAddress;
         private static Func<object, IPEndPoint> GetDeviceIPAddress;
 
-        static LocalAddress()
+        static AddressReflection()
         {
             m_openNatAssem = typeof(NatDevice).Assembly;
 

@@ -1,15 +1,13 @@
 ﻿using Open.Nat;
 using System.Collections.Generic;
 using System.Net;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
-using UPnP.Objects;
-using UPnP.Utils;
+using UPnPWin.Objects;
+using UPnPWin.Utils;
 
-namespace UPnP.Forms
+namespace UPnPWin.Forms
 {
     /// <summary>
     /// Interaction logic for NewMappingForm.xaml
@@ -55,7 +53,7 @@ namespace UPnP.Forms
                 BtnAddMapping.IsEnabled = true;
         }
 
-        private async Task<bool> AddMapping(List<Mapping> mappings)
+        private async Task<bool> AddMappings(List<Mapping> mappings)
         {
             foreach (var mapping in mappings)
             {
@@ -73,6 +71,17 @@ namespace UPnP.Forms
             }
 
             MessageBox.Show("Successfully added UPnP port mappings.", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
+            return true;
+        }
+        private async Task<bool> AddMapping(Mapping mapping)
+        {
+            try
+            { await MyNatDevice.Instance.AddMapping(mapping); }
+            catch (NatDeviceNotFoundException)
+            {
+                MessageBox.Show("Unable to add UPnP mapping.\nNo Nat device available!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return false;
+            }
             return true;
         }
 
@@ -110,12 +119,12 @@ namespace UPnP.Forms
 
             if (mappings.Count < 1)
             {
-                MessageBox.Show("No valid UPnP mappinh configuration was entered.\nSelect at least one protocol."
+                MessageBox.Show("No valid UPnP mapping configuration was entered.\nSelect at least one protocol."
                     , "Error", MessageBoxButton.OK, MessageBoxImage.Error); return;
             }
 
             SetBusy(true);
-            if (await AddMapping(mappings))
+            if (await AddMappings(mappings))
             {
                 m_didUpdate = true;
                 Close();
