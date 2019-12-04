@@ -10,36 +10,29 @@ namespace UPnP.Forms.Components
 {
     public partial class IPTextBox : UserControl
     {
+        public delegate void OnFaultedOctetDelegate(int actual, int lower, int upper);
+        public event OnFaultedOctetDelegate OnFaultedOctet;
+
+        private const int LowerLimit = 0;
+        private const int UpperLimit = 255;
+
         private static readonly List<Key> m_digitKeys;
         private static readonly List<Key> m_allowedKeys;
 
         private readonly List<TextBox> m_segments;
 
-        public string IPAddressString
-        {
-            get
-            {
-                return string.Format("{0}.{1}.{2}.{3}",
-                    Segment1.Text == string.Empty ? "0" : Segment1.Text,
-                    Segment2.Text == string.Empty ? "0" : Segment2.Text,
-                    Segment3.Text == string.Empty ? "0" : Segment3.Text,
-                    Segment4.Text == string.Empty ? "0" : Segment4.Text);
-            }
-            set
-            {
-                if (!IPAddress.TryParse(value, out IPAddress ip))
-                    throw new InvalidOperationException("Invalid IPAddress.");
-
-                IPAddress = ip;
-            }
-        }
         public IPAddress IPAddress
         {
             get
             {
-                if (!IPAddress.TryParse(IPAddressString, out IPAddress ip))
-                    throw new InvalidOperationException("Invalid IPAddress.");
-                return ip;
+                byte[] octets = new byte[4]
+                {
+                    TextBoxOctet(Segment1),
+                    TextBoxOctet(Segment2),
+                    TextBoxOctet(Segment3),
+                    TextBoxOctet(Segment4),
+                };
+                return new IPAddress(octets);
             }
             set
             {
@@ -80,7 +73,6 @@ namespace UPnP.Forms.Components
                 Key.Delete
             };
         }
-
         public IPTextBox()
         {
             InitializeComponent();
@@ -141,9 +133,13 @@ namespace UPnP.Forms.Components
         private void TextBoxBase_OnTextChanged(object sender, TextChangedEventArgs e)
         {
             if (FocusManager.GetFocusedElement(this) is TextBox current
-                && current.Text.Length == 3
-                && current.CaretIndex == 3)
-            { MoveFocusRight(current); }
+                && current.Text.Length == 3)
+            {
+                if (current.CaretIndex == 3)
+                    MoveFocusRight(current);
+                else
+                    FinishOctet(current);
+            }
         }
         private void TextBox_OnFocusLost(object sender, RoutedEventArgs e)
         {
@@ -288,24 +284,15 @@ namespace UPnP.Forms.Components
                 throw new Exception("Invalid number was entered.");
 
             int id = TextBoxID(current);
-            int lowerLimit = 0;// id == 0 ? 1 : 0; Optional for valid IPAddresses
-            int upperLimit = 255;
-
-            if (octet < lowerLimit || octet > upperLimit)
+            if (octet < LowerLimit || octet > UpperLimit)
             {
-                if (id == 0 && octet < lowerLimit)
-                    current.Text = lowerLimit.ToString();
+                if (id == 0 && octet < LowerLimit)
+                    current.Text = LowerLimit.ToString();
                 else
-                    current.Text = upperLimit.ToString();
+                    current.Text = UpperLimit.ToString();
                 current.CaretIndex = 0;
 
-                MessageBox.Show(string.Format(
-                    "{0} is not a valid entry. Please specify a value between {1} and {2}."
-                    , octet, lowerLimit, upperLimit),
-                    "Error",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Warning
-                    );
+                OnFaultedOctet?.Invoke(octet, LowerLimit, UpperLimit);
 
                 return false;
             }
@@ -319,5 +306,8 @@ namespace UPnP.Forms.Components
 
             return textBox.Name[7] - '0' - 1;
         }
+
+        private byte TextBoxOctet(TextBox textBox)
+        { return textBox.Text == string.Empty ? (byte)0 : byte.Parse(textBox.Text); }
     }
 }

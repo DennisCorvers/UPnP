@@ -6,11 +6,11 @@
         xmlns:local="clr-namespace:UPnP.Forms"
         xmlns:components="clr-namespace:UPnP.Forms.Components"
         mc:Ignorable="d"
-        Title="NewMappingForm" Height="300" Width="500"
-            MinWidth="370" MinHeight="280">
+        Title="NewMappingForm" Height="300" Width="500" MinWidth="370" MinHeight="300"
+        Closing="Window_Closing">
 
 
-    <StackPanel Orientation="Vertical" Margin="10,20,10,10">
+    <StackPanel Orientation="Vertical" Margin="10,20,10,10" VerticalAlignment="Stretch">
         <Grid Height="60">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="80"/>
@@ -55,8 +55,9 @@
             <Label Grid.Column="0" Grid.Row="2" VerticalAlignment="Center">Description:</Label>
 
             <TextBox Grid.Column="1" Grid.Row="0" VerticalAlignment="Center" Name="TbLifetime" 
-                     MaxLength="10" PreviewTextInput="OnPreviewTextInput"/>
-            <components:IPTextBox Grid.Column="1" Grid.Row="1" x:Name="TbPrivateIP"/>
+                     MaxLength="5" PreviewTextInput="OnPreviewTextInput" Text="0"/>
+            <components:IPTextBox Grid.Column="1" Grid.Row="1" x:Name="TbPrivateIP" 
+                                  OnFaultedOctet="TbPrivateIP_OnFaultedOctet"/>
             <TextBox Grid.Column="1" Grid.Row="2" VerticalAlignment="Center" Name="TbDescription"
                      MaxLength="50"/>
         </Grid>
@@ -66,7 +67,7 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
+                <RowDefinition Height="22"/>
             </Grid.RowDefinitions>
             <Button Name="BtnAddMapping" Grid.Column="0" Width="100" 
                     Click="BtnAddMapping_Click">Add Mapping</Button>

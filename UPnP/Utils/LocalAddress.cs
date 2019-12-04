@@ -34,7 +34,7 @@ namespace UPnP.Utils
             field = GetPrivateField(m_deviceInfoType, "<LocalAddress>k__BackingField");
             GetPrivateIPAddress = field.CreateGetter<object, IPAddress>();
 
-            field = GetPrivateField(m_deviceInfoType, "<LocalAddress>k__BackingField");
+            field = GetPrivateField(m_deviceInfoType, "<HostEndPoint>k__BackingField");
             GetDeviceIPAddress = field.CreateGetter<object, IPEndPoint>();
         }
 

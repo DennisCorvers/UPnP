@@ -1,7 +1,11 @@
 ﻿using Open.Nat;
+using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
+using UPnP.Forms;
 using UPnP.Objects;
 
 namespace UPnP
@@ -11,14 +15,14 @@ namespace UPnP
     /// </summary>
     public partial class MainWindow : Window
     {
-        private bool IsBusy
+        private NewMappingForm m_newMapForm;
+        private NewMappingForm NewMapForm
         {
-            set
+            get
             {
-                if (value)
-                { StartBusy(); }
-                else
-                { EndBusy(); }
+                if (m_newMapForm == null)
+                    m_newMapForm = new NewMappingForm();
+                return m_newMapForm;
             }
         }
 
@@ -27,28 +31,6 @@ namespace UPnP
             InitializeComponent();
 
             BtnRefresh_Click(null, null);
-        }
-
-        /// <summary>
-        /// Blocks the user from making new requests to the NAT device.
-        /// </summary>
-        private void StartBusy()
-        {
-            btnAdd.IsEnabled = false;
-            btnDelete.IsEnabled = false;
-            btnRefresh.IsEnabled = false;
-        }
-        /// <summary>
-        /// Releases the block
-        /// </summary>
-        private void EndBusy()
-        {
-            if (MyNatDevice.HasDevice)
-            {
-                btnAdd.IsEnabled = true;
-                btnDelete.IsEnabled = true;
-            }
-            btnRefresh.IsEnabled = true;
         }
 
         private void FillMappings(List<MyNatMapping> mappings)
@@ -60,27 +42,7 @@ namespace UPnP
             { UPnPGrid.Items.Add(map); }
         }
 
-        private async Task AddMapping(MyNatMapping mapping)
-        {
-            try
-            {
-                //await m_device.AddMapping(mapping.Mapping);
-                await RefreshMappings();
-            }
-            catch (NatDeviceNotFoundException)
-            { HandleNoNatDeviceException(); }
-        }
-        private async Task RemoveMapping(MyNatMapping mapping)
-        {
-            try
-            {
-                //await m_device.RemoveMapping(mapping.Mapping);
-                await RefreshMappings();
-            }
-            catch (NatDeviceNotFoundException)
-            { HandleNoNatDeviceException(); }
-        }
-        private async Task RefreshMappings()
+        private async Task<MyNatDevice> GetDevice()
         {
             if (!MyNatDevice.HasDevice)
             {
@@ -91,35 +53,68 @@ namespace UPnP
                     MessageBox.Show(
                         "Unable to discover NAT Device.\nMake sure UPnP is enabled on your router!",
                         "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
+                    return null;
+                }
+                catch (TaskCanceledException)
+                {
+                    MessageBox.Show(
+                        "Nat device discovery timed-out.\nMake sure UPnP is enabled on your router!",
+                        "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return null;
                 }
             }
-
-            List<MyNatMapping> mappings;
+            return MyNatDevice.Instance;
+        }
+        private async Task<List<MyNatMapping>> GetMappings()
+        {
             try
-            { mappings = await MyNatDevice.Instance.GetAllMappings(); }
+            { return await MyNatDevice.Instance.GetAllMappings(); }
             catch (NatDeviceNotFoundException)
             {
                 MessageBox.Show(
                     "Unable to get UPnP mappings.\nNo NAT device available.",
                     "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
+                return new List<MyNatMapping>();
             }
-            FillMappings(mappings);
+        }
+        private async Task RemoveMapping(MyNatMapping mapping)
+        {
+            try
+            {
+                await MyNatDevice.Instance.RemoveMapping(mapping.Mapping);
+                FillMappings(await GetMappings());
+            }
+            catch (NatDeviceNotFoundException)
+            { HandleNoNatDeviceException(); }
         }
 
+        private async Task RefreshUI()
+        {
+            MyNatDevice device = await GetDevice();
+            if (device == null) return;
+
+            SetIPLabel(labPublicIP, device.PublicIP);
+            SetIPLabel(labPrivateIP, device.LocalIP);
+            SetIPLabel(labDeviceIP, device.DeviceEndpoint.Address);
+
+            //FillMappings(await GetMappings());
+        }
         private async void BtnRefresh_Click(object sender, RoutedEventArgs e)
         {
-            IsBusy = true;
-            await RefreshMappings();
-            IsBusy = false;
+            SetBusy(true);
+            await RefreshUI();
+            SetBusy(false);
         }
 
-        private async void BtnAdd_Click(object sender, RoutedEventArgs e)
+        private void BtnAdd_Click(object sender, RoutedEventArgs e)
         {
-            IsBusy = true;
-            //var selection = UPnPGrid.SelectedItem;
-            IsBusy = false;
+            IPAddress myAddress = MyNatDevice.Instance.LocalIP;
+            if (myAddress == null) myAddress = IPAddress.Any;
+
+            var form = NewMapForm;
+            form.SetWindow(myAddress);
+
+            form.ShowDialog();
         }
         private async void BtnDelete_Click(object sender, RoutedEventArgs e)
         {
@@ -131,9 +126,9 @@ namespace UPnP
             }
             else
             {
-                IsBusy = true;
+                SetBusy(true);
                 await RemoveMapping((MyNatMapping)selection);
-                IsBusy = false;
+                SetBusy(false);
             }
         }
         private void BtnCancel_Click(object sender, RoutedEventArgs e)
@@ -144,6 +139,40 @@ namespace UPnP
             MessageBox.Show(
                 "No NAT device available.\nTry refreshing first.",
                 "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+        }
+        private void SetBusy(bool isBusy)
+        {
+            //Load spinner?
+            if (isBusy)
+            {
+                btnAdd.IsEnabled = false;
+                btnDelete.IsEnabled = false;
+                btnRefresh.IsEnabled = false;
+            }
+            else
+            {
+                if (MyNatDevice.HasDevice)
+                {
+                    btnAdd.IsEnabled = true;
+                    btnDelete.IsEnabled = true;
+                }
+                btnRefresh.IsEnabled = true;
+            }
+        }
+        private void SetIPLabel(Label label, IPAddress ip)
+        {
+            if (ip == null || ip == IPAddress.Any)
+                label.Content = "N/A";
+            else
+                label.Content = ip;
+        }
+
+        protected override void OnClosed(EventArgs e)
+        {
+            NewMapForm.Close();
+            base.OnClosed(e);
+
+            Application.Current.Shutdown();
         }
     }
 }

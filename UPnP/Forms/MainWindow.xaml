@@ -3,17 +3,18 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:UPnP"
         mc:Ignorable="d"
-        Title="UPnP" MinWidth="345" MinHeight="200" Height="450" Width="700">
-    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ShowGridLines="True">
+        Title="UPnP" MinWidth="345" MinHeight="250" Height="450" Width="700">
+    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition MinHeight="50" MaxHeight="50" Height="1*"/>
-            <RowDefinition Height="10*"/>
+            <RowDefinition Height="35"/>
+            <RowDefinition />
         </Grid.RowDefinitions>
+        <!--Menu Bar-->
         <DockPanel Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Center" 
                     Margin="5" Background="#FFB8FFC8">
             <Button Name="btnRefresh" Click="BtnRefresh_Click" Height="35" Width="35" Margin="2">Rfsh</Button>
@@ -21,7 +22,31 @@
             <Button Name="btnDelete"  Click="BtnDelete_Click"  Height="35" Width="35" Margin="2">Del</Button>
             <Button Name="btnCancel"  Click="BtnCancel_Click"  Height="35" Width="35" Margin="2" HorizontalAlignment="Right">Can</Button>
         </DockPanel>
-        <DataGrid Name="UPnPGrid" IsReadOnly="true" Grid.Row="1" SelectionMode="Single" SelectionUnit="FullRow" Margin="5">
+        <!--IP Address Bar-->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <DockPanel Margin="7,0,0,0" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                <Label Padding="0" FontWeight="Bold" Content="Public IP: "></Label>
+                <Label Name="labPublicIP" Padding="0" Content="N/A"></Label>
+            </DockPanel>
+            <DockPanel Margin="7,0,0,0" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                <Label Padding="0" FontWeight="Bold" Content="Private IP: "></Label>
+                <Label Name="labPrivateIP" Padding="0" Content="N/A"></Label>
+            </DockPanel>
+            <DockPanel Grid.Row="0" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                <Label Padding="0" FontWeight="Bold" Content="Device IP: "></Label>
+                <Label Name="labDeviceIP" Padding="0" Content="N/A"></Label>
+            </DockPanel>
+        </Grid>
+        <!--UPnP Mapping Grid-->
+        <DataGrid Name="UPnPGrid" IsReadOnly="true" Grid.Row="2" SelectionMode="Single" SelectionUnit="FullRow" Margin="5">
             <DataGrid.Columns>
                 <DataGridTextColumn MinWidth="65"  MaxWidth="65"  Width="1*" Binding="{Binding Protocol}" Header="TCP/UDP"/>
                 <DataGridTextColumn MinWidth="100" MaxWidth="100" Width="1*" Binding="{Binding IPAddress}" Header="IP Address"/>

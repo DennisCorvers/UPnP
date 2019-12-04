@@ -17,7 +17,7 @@ namespace UPnP.Objects
         private readonly List<MyNatMapping> m_mappings;
 
         public IPAddress PublicIP
-        { private get; set; }
+        { get; private set; }
 
         public IPEndPoint DeviceEndpoint
         {
