@@ -3,25 +3,43 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:components="clr-namespace:UPnPWin.Forms.Components"
         mc:Ignorable="d"
         Title="UPnP" MinWidth="345" MinHeight="250" Height="450" Width="700">
+
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition MinHeight="50" MaxHeight="50" Height="1*"/>
+            <RowDefinition Height="55"/>
             <RowDefinition Height="35"/>
+            <RowDefinition Height="3"/>
             <RowDefinition />
         </Grid.RowDefinitions>
         <!--Menu Bar-->
-        <DockPanel Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Center" 
-                    Margin="5" Background="#FFB8FFC8">
-            <Button Name="btnRefresh" Click="BtnRefresh_Click" Height="35" Width="35" Margin="2">Rfsh</Button>
-            <Button Name="btnAdd"     Click="BtnAdd_Click"     Height="35" Width="35" Margin="2">Add</Button>
-            <Button Name="btnDelete"  Click="BtnDelete_Click"  Height="35" Width="35" Margin="2">Del</Button>
-            <Button Name="btnCancel"  Click="BtnCancel_Click"  Height="35" Width="35" Margin="2" HorizontalAlignment="Right">Can</Button>
-        </DockPanel>
+
+        <Grid Margin="0,0,0,5" VerticalAlignment="Center" HorizontalAlignment="Stretch" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition MinWidth="165"/>
+                <ColumnDefinition MinWidth="80"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <DockPanel Height="50" Grid.Row="0" HorizontalAlignment="Left">
+                <components:RoundButton Grid.Column="0" x:Name="btnRefresh" Click="BtnRefresh_Click" Height="38" Width="38" Margin="7,0,30,0">
+                    <Image Source="/UPnPWin;component/Resources/RefreshBL.png"/>
+                </components:RoundButton>
+                <components:RoundButton Grid.Column="0" x:Name="btnAdd" Click="BtnAdd_Click" Height="38" Width="38" Margin="2,0,2,0">
+                    <Image Source="/UPnPWin;component/Resources/AddBL.png"/>
+                </components:RoundButton>
+                <components:RoundButton Grid.Column="0" x:Name="btnDelete" Click="BtnDelete_Click" Height="38" Width="38" Margin="2,0,2,0">
+                    <Image Source="/UPnPWin;component/Resources/RemoveBL.png"/>
+                </components:RoundButton>
+            </DockPanel>
+            <Image Grid.Column="1" Height="45" HorizontalAlignment="Center" Source="/UPnPWin;component/Resources/UPnPLogo.png"/>
+
+            <Button Grid.Column="2" Name="btnCancel"  Click="BtnCancel_Click"  Height="35" Width="35" Margin="2,0,2,0" HorizontalAlignment="Right">Can</Button>
+        </Grid>
         <!--IP Address Bar-->
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
@@ -45,8 +63,11 @@
                 <Label Name="labDeviceIP" Padding="0" Content="N/A"></Label>
             </DockPanel>
         </Grid>
+        <StackPanel Grid.Row="2" Orientation="Vertical">
+            <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
+        </StackPanel>
         <!--UPnP Mapping Grid-->
-        <DataGrid Name="UPnPGrid" IsReadOnly="true" Grid.Row="2" SelectionMode="Extended"  SelectionUnit="FullRow" Margin="5">
+        <DataGrid Name="UPnPGrid" IsReadOnly="true" Grid.Row="3" SelectionMode="Extended"  SelectionUnit="FullRow" Margin="5">
             <DataGrid.Columns>
                 <DataGridTextColumn MinWidth="65"  MaxWidth="65"  Width="1*" Binding="{Binding Protocol}" Header="TCP/UDP"/>
                 <DataGridTextColumn MinWidth="100" MaxWidth="100" Width="1*" Binding="{Binding IPAddress}" Header="IP Address"/>

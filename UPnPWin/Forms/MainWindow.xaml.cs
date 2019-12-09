@@ -29,8 +29,9 @@ namespace UPnPWin.Forms
         public MainWindow()
         {
             InitializeComponent();
-
+#if !FASTDEBUG
             BtnRefresh_Click(null, null);
+#endif
         }
 
         private void FillMappings(List<MyNatMapping> mappings)
@@ -136,7 +137,7 @@ namespace UPnPWin.Forms
                     FillMappings(await GetMappings());
 
                 SetBusy(false);
-            UPnPGrid.UnselectAllCells();
+                UPnPGrid.UnselectAllCells();
             }
         }
         private void BtnCancel_Click(object sender, RoutedEventArgs e)

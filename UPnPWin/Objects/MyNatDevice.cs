@@ -16,7 +16,7 @@ namespace UPnPWin.Objects
 
         private NatDevice m_device;
         private NatDiscoverer m_discoverer;
-        private readonly CancellationTokenSource m_cancellationToken;
+        private CancellationTokenSource m_cancellationToken;
 
         private ThreadSafeBool m_deviceAvailable;
 
@@ -63,14 +63,14 @@ namespace UPnPWin.Objects
         private MyNatDevice()
         {
             m_deviceAvailable.Value = false;
-            m_cancellationToken = new CancellationTokenSource(Timeout);
+            m_discoverer = new NatDiscoverer();
         }
 
         public async Task FindDevice()
         {
             if (m_deviceAvailable.Value) { return; }
 
-            m_discoverer = new NatDiscoverer();
+            m_cancellationToken = new CancellationTokenSource(5000);
             Task<NatDevice> discoverDeviceTask = m_discoverer.DiscoverDeviceAsync(PortMapper.Upnp, m_cancellationToken);
             m_device = await discoverDeviceTask;
 
