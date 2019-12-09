@@ -11,13 +11,12 @@ namespace UPnPWin.Objects
 {
     internal sealed class MyNatDevice
     {
-        public const bool TestDuplicates = false;
+        public const bool TestDuplicates = true;
         public const int Timeout = 5000;
 
         private NatDevice m_device;
         private NatDiscoverer m_discoverer;
         private readonly CancellationTokenSource m_cancellationToken;
-        private readonly List<MyNatMapping> m_mappings;
 
         private ThreadSafeBool m_deviceAvailable;
 
@@ -64,7 +63,6 @@ namespace UPnPWin.Objects
         private MyNatDevice()
         {
             m_deviceAvailable.Value = false;
-            m_mappings = new List<MyNatMapping>(8);
             m_cancellationToken = new CancellationTokenSource(Timeout);
         }
 
@@ -86,10 +84,8 @@ namespace UPnPWin.Objects
         }
         public async Task<List<MyNatMapping>> GetAllMappings()
         {
-            //TODO fix...
-            if (!m_deviceAvailable.Value) { throw new NatDeviceNotFoundException(); }
-
-            m_mappings.Clear();
+            if (!m_deviceAvailable.Value)
+                throw new NatDeviceNotFoundException();
 
             IEnumerable<Mapping> mappings;
             try
@@ -97,45 +93,18 @@ namespace UPnPWin.Objects
             catch (NatDeviceNotFoundException e)
             { m_deviceAvailable.Value = false; throw e; }
 
-            if (mappings == null) { return m_mappings; }
+            if (mappings == null)
+                return new List<MyNatMapping>();
 
+            List<MyNatMapping> newMappings = new List<MyNatMapping>();
             foreach (var map in mappings)
-            { m_mappings.Add(new MyNatMapping(map)); }
+                newMappings.Add(new MyNatMapping(map));
 
-            return m_mappings;
-        }
-
-        public async Task AddMapping(Mapping mapping)
-        {
-            if (!m_deviceAvailable.Value)
-                throw new NatDeviceNotFoundException();
-
-            Mapping dupeMapping;
-            try
-            {
-                if (TestDuplicates && (dupeMapping = await m_device.GetSpecificMappingAsync
-                        (mapping.Protocol, mapping.PrivatePort)) != null)
-                    throw new DuplicateMappingException(dupeMapping);
-
-                await m_device.CreatePortMapAsync(mapping);
-            }
-            catch (NatDeviceNotFoundException e)
-            { m_deviceAvailable.Value = false; throw e; }
-        }
-        public async Task RemoveMapping(Mapping mapping)
-        {
-            if (!m_deviceAvailable.Value)
-                throw new NatDeviceNotFoundException();
-
-            try
-            { await m_device.DeletePortMapAsync(mapping); }
-            catch (NatDeviceNotFoundException e)
-            { m_deviceAvailable.Value = false; throw e; }
+            return newMappings;
         }
 
         public async Task AddMappings(List<Mapping> mappings)
         {
-            //TODO fix?
             if (!HasDevice) { throw new NatDeviceNotFoundException(); }
 
             var tasks = new List<Task>(mappings.Count);
@@ -152,9 +121,25 @@ namespace UPnPWin.Objects
                     throw task.Exception.InnerException;
             }
         }
+        private async Task AddMapping(Mapping mapping)
+        {
+            if (!m_deviceAvailable.Value)
+                throw new NatDeviceNotFoundException();
+
+            Mapping dupeMapping;
+            try
+            {
+                if (TestDuplicates && (dupeMapping = await m_device.GetSpecificMappingAsync
+                        (mapping.Protocol, mapping.PrivatePort)) != null)
+                    throw new DuplicateMappingException(dupeMapping);
+
+                await m_device.CreatePortMapAsync(mapping);
+            }
+            catch (NatDeviceNotFoundException e)
+            { m_deviceAvailable.Value = false; throw e; }
+        }
         public async Task RemoveMappings(List<Mapping> mappings)
         {
-            //TODO fix?
             //TODO Test when no network/UPnP available...
             if (!m_deviceAvailable.Value) { throw new NatDeviceNotFoundException(); }
 
@@ -171,6 +156,16 @@ namespace UPnPWin.Objects
                 if (task.Exception != null)
                     throw task.Exception.InnerException;
             }
+        }
+        private async Task RemoveMapping(Mapping mapping)
+        {
+            if (!m_deviceAvailable.Value)
+                throw new NatDeviceNotFoundException();
+
+            try
+            { await m_device.DeletePortMapAsync(mapping); }
+            catch (NatDeviceNotFoundException e)
+            { m_deviceAvailable.Value = false; throw e; }
         }
 
         public void CancelPendingRequests()

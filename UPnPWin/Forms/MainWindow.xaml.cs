@@ -2,20 +2,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using UPnPWin.Objects;
-using UPnPWin.Utils;
 
 namespace UPnPWin.Forms
 {
@@ -118,12 +109,16 @@ namespace UPnPWin.Forms
         private void BtnAdd_Click(object sender, RoutedEventArgs e)
         {
             IPAddress myAddress = MyNatDevice.Instance.LocalIP;
-            if (myAddress == null) myAddress = IPAddress.Any;
+            if (myAddress == null)
+                myAddress = IPAddress.Any;
 
             var form = NewMapForm;
             form.SetWindow(myAddress);
 
             form.ShowDialog();
+
+            if (form.UpdateAvailable)
+                OnMappingAdded();
         }
         private async void BtnDelete_Click(object sender, RoutedEventArgs e)
         {
@@ -136,19 +131,18 @@ namespace UPnPWin.Forms
             else
             {
                 SetBusy(true);
-                //MyNatDevice.TEST();
 
-                if (await RemoveMapping(GetMappings(selection)))
+                if (await RemoveMapping(GetSelectedMappings(selection)))
                     FillMappings(await GetMappings());
 
                 SetBusy(false);
-            }
             UPnPGrid.UnselectAllCells();
+            }
         }
         private void BtnCancel_Click(object sender, RoutedEventArgs e)
         { MyNatDevice.Instance.CancelPendingRequests(); }
 
-        private List<Mapping> GetMappings(IList selection)
+        private List<Mapping> GetSelectedMappings(IList selection)
         {
             List<Mapping> returnValue = new List<Mapping>(selection.Count);
             foreach (var item in selection)
@@ -188,6 +182,11 @@ namespace UPnPWin.Forms
                 label.Content = "N/A";
             else
                 label.Content = ip;
+        }
+
+        private async void OnMappingAdded()
+        {
+            FillMappings(await Task.Run(GetMappings));
         }
 
         protected override void OnClosed(EventArgs e)

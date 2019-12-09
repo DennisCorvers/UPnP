@@ -64,11 +64,12 @@
     </Compile>
     <Compile Include="Exceptions\DuplicateMappingException.cs" />
     <Compile Include="Utils\AddressReflection.cs" />
-    <Compile Include="Utils\CheckBoxLock.cs" />
+    <Compile Include="Utils\UI\CheckBoxLock.cs" />
     <Compile Include="Utils\Extensions.cs" />
     <Compile Include="Utils\FieldAccess.cs" />
     <Compile Include="Utils\InputConstraints.cs" />
     <Compile Include="Utils\ThreadSafeBool.cs" />
+    <Compile Include="Utils\UI\DuplicateTextbox.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Forms\Components\IPTextBox.xaml.cs">

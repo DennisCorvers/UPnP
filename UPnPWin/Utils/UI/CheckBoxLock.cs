@@ -4,14 +4,15 @@ using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace UPnPWin.Utils
+namespace UPnPWin.Utils.UI
 {
     /// <summary>
     /// Keeps at least one checkbox locked on "Checked"
     /// </summary>
     internal class CheckBoxLock
     {
-        private List<CheckBox> m_checkBoxes;
+        private readonly List<CheckBox> m_checkBoxes;
+        private int m_checkedCount;
 
         internal CheckBoxLock(params CheckBox[] checkBoxes)
         {
@@ -30,7 +31,12 @@ namespace UPnPWin.Utils
             }
 
             if (checkedCount < 1)
+            {
                 m_checkBoxes[0].IsChecked = true;
+                m_checkedCount = 1;
+            }
+            else
+                m_checkedCount = checkedCount;
         }
 
         ~CheckBoxLock()
@@ -44,29 +50,23 @@ namespace UPnPWin.Utils
 
         private void OnCheckBoxChecked(object sender, RoutedEventArgs e)
         {
-            foreach (var checkBox in m_checkBoxes)
-                checkBox.IsEnabled = true;
+            if (++m_checkedCount == 2)
+                foreach (var checkBox in m_checkBoxes)
+                    checkBox.IsEnabled = true;
         }
         private void OnCheckBoxUnchecked(object sender, RoutedEventArgs e)
         {
-            int checkedCount = 0;
-            CheckBox lastChecked = null;
-
-            for (int i = m_checkBoxes.Count - 1; i >= 0; i--)
+            if (--m_checkedCount == 1)
             {
-                var checkBox = m_checkBoxes[i];
+                CheckBox lastChecked = null;
 
-                if ((bool)checkBox.IsChecked)
+                for (int i = m_checkBoxes.Count - 1; i >= 0; i--)
                 {
-                    checkedCount++;
-                    lastChecked = checkBox;
+                    var checkBox = m_checkBoxes[i];
+                    if ((bool)checkBox.IsChecked)
+                        lastChecked = checkBox;
                 }
-            }
-
-            if (checkedCount == 1)
-            {
                 lastChecked.IsEnabled = false;
-                return;
             }
         }
     }

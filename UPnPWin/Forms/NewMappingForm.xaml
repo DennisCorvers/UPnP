@@ -7,7 +7,7 @@
         xmlns:components="clr-namespace:UPnPWin.Forms.Components"
         mc:Ignorable="d"
         Title="NewMappingForm" Height="300" Width="500" MinWidth="370" MinHeight="300"
-        Closing="Window_Closing">
+        Closing="Window_Closing" IsVisibleChanged="Window_Loaded" >
 
 
     <StackPanel Orientation="Vertical" Margin="10,20,10,10" VerticalAlignment="Stretch">
@@ -29,7 +29,8 @@
             <TextBox Grid.Column="1" Grid.Row="0" VerticalAlignment="Center" Name="TbPublicPort" 
                      PreviewTextInput="OnPreviewTextInput" MaxLength="5" Width="100" HorizontalAlignment="Left"/>
             <TextBox Grid.Column="1" Grid.Row="1" VerticalAlignment="Center" Name="TbPrivatePort" 
-                     PreviewTextInput="OnPreviewTextInput" MaxLength="5" Width="100" HorizontalAlignment="Left"/>
+                     PreviewTextInput="OnPreviewTextInput" MaxLength="5" Width="100" HorizontalAlignment="Left" 
+                     Background="#FFE6E6E6"/>
 
             <CheckBox Grid.Column="3" Grid.Row="0" VerticalAlignment="Center" 
                       Name="CbTCP" IsChecked="True"/>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace UPnPWin.Utils
@@ -14,7 +15,7 @@ namespace UPnPWin.Utils
             Regex regex = new Regex("[^0-9]+");
             e.Handled = regex.IsMatch(e.Text);
         }
-        internal static bool EnsureBetween(int lower, int upper, int actual, 
+        internal static bool EnsureBetween(int lower, int upper, int actual,
             string valueName = "", bool visible = true)
         {
             if (actual < lower || actual > upper)
@@ -40,11 +41,15 @@ namespace UPnPWin.Utils
             return true;
         }
 
-        internal static int ParseNullOrEmpty(string value)
+        internal static int ToInt(this TextBox value)
         {
-            if (string.IsNullOrWhiteSpace(value))
+            if (string.IsNullOrWhiteSpace(value.Text))
                 return 0;
-            return int.Parse(value);
+
+            if (int.TryParse(value.Text, out int result))
+                return result;
+            else
+                throw new InvalidCastException();
         }
     }
 }
