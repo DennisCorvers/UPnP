@@ -5,7 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:components="clr-namespace:UPnPWin.Forms.Components"
         mc:Ignorable="d"
-        Title="UPnP" MinWidth="345" MinHeight="250" Height="450" Width="700">
+        Title="UPnP" 
+        Icon="/UPnPWin;component/Resources/UPnPIcon.png"
+        MinWidth="345" MinHeight="250" Height="450" Width="700">
 
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <Grid.ColumnDefinitions>
@@ -37,8 +39,9 @@
                 </components:RoundButton>
             </DockPanel>
             <Image Grid.Column="1" Height="45" HorizontalAlignment="Center" Source="/UPnPWin;component/Resources/UPnPLogo.png"/>
-
-            <Button Grid.Column="2" Name="btnCancel"  Click="BtnCancel_Click"  Height="35" Width="35" Margin="2,0,2,0" HorizontalAlignment="Right">Can</Button>
+            <components:RoundButton Grid.Column="2" HorizontalAlignment="Right"  x:Name="btnCancel" Click="BtnCancel_Click" Height="38" Width="38" Margin="0,0,7,0">
+                <Image Source="/UPnPWin;component/Resources/cancel.png"/>
+            </components:RoundButton>
         </Grid>
         <!--IP Address Bar-->
         <Grid Grid.Row="1">

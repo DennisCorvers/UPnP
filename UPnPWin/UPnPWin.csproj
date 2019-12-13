@@ -146,16 +146,18 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\RemoveBL.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
+    <Resource Include="Resources\cancel.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\AddBL.png" />
     <Resource Include="Resources\RefreshBL.PNG" />
+    <Resource Include="Resources\RemoveBL.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\UPnPLogo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\UPnPIcon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

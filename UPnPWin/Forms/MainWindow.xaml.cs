@@ -29,6 +29,9 @@ namespace UPnPWin.Forms
         public MainWindow()
         {
             InitializeComponent();
+
+            btnAdd.IsEnabled = false;
+            btnDelete.IsEnabled = false;
 #if !FASTDEBUG
             BtnRefresh_Click(null, null);
 #endif

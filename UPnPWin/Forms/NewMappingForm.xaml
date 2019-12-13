@@ -6,7 +6,9 @@
         xmlns:local="clr-namespace:UPnPWin.Forms"
         xmlns:components="clr-namespace:UPnPWin.Forms.Components"
         mc:Ignorable="d"
-        Title="NewMappingForm" Height="300" Width="500" MinWidth="370" MinHeight="300"
+        Title="NewMappingForm" 
+        Height="300" Width="500" MinWidth="370" MinHeight="300"
+        ShowInTaskbar="False"
         Closing="Window_Closing" IsVisibleChanged="Window_Loaded" >
 
 
