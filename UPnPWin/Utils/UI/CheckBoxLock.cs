@@ -43,8 +43,8 @@ namespace UPnPWin.Utils.UI
         {
             foreach (CheckBox cb in m_checkBoxes)
             {
-                cb.Checked += OnCheckBoxChecked;
-                cb.Unchecked += OnCheckBoxUnchecked;
+                cb.Checked -= OnCheckBoxChecked;
+                cb.Unchecked -= OnCheckBoxUnchecked;
             }
         }
 
