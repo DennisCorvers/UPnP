@@ -27,7 +27,10 @@ namespace UPnPWin.Utils.UI
 
             m_mirror.TextChanged += OnTextChanged;
             m_original.GotFocus += OnGotFocus;
+            m_original.LostFocus += OnLostFocus;
         }
+
+
 
         ~DuplicateTextbox()
         {
@@ -54,6 +57,15 @@ namespace UPnPWin.Utils.UI
             m_isManual = true;
             m_original.Background = m_mirror.Background;
             m_original.Text = "";
+        }
+
+        private void OnLostFocus(object sender, System.Windows.RoutedEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(m_original.Text))
+            { 
+                Reset();
+                m_original.Text = m_mirror.Text;
+            }
         }
     }
 }

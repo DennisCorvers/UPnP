@@ -214,6 +214,7 @@ namespace UPnPWin.Forms
             NewMapForm.Close();
             base.OnClosed(e);
 
+            BtnCancel_Click(null, null);
             Application.Current.Shutdown();
         }
     }
