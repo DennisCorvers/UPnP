@@ -30,12 +30,11 @@ namespace UPnPWin.Utils.UI
             m_original.LostFocus += OnLostFocus;
         }
 
-
-
         ~DuplicateTextbox()
         {
             m_mirror.TextChanged -= OnTextChanged;
             m_original.GotFocus -= OnGotFocus;
+            m_original.LostFocus -= OnLostFocus;
         }
 
         internal void Reset()
