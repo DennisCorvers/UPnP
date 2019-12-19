@@ -12,7 +12,7 @@ namespace UPnPWin.Objects
     internal sealed class MyNatDevice
     {
         public const bool TestDuplicates = true;
-        public const int Timeout = 5000;
+        public const int Timeout = 30000;
 
         private NatDevice m_device;
         private NatDiscoverer m_discoverer;

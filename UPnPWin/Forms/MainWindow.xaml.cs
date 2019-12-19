@@ -6,7 +6,9 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using UPnPWin.Objects;
+using UPnPWin.Utils.UI;
 
 namespace UPnPWin.Forms
 {
@@ -15,6 +17,8 @@ namespace UPnPWin.Forms
     /// </summary>
     public partial class MainWindow : Window
     {
+        private readonly KeydownHandler<DataGrid> m_upnpGridHandler;
+
         private NewMappingForm m_newMapForm;
         private NewMappingForm NewMapForm
         {
@@ -30,10 +34,14 @@ namespace UPnPWin.Forms
         {
             InitializeComponent();
 
+            m_upnpGridHandler = new KeydownHandler<DataGrid>(UPnPGrid);
+            m_upnpGridHandler.OnKeyPress += UPnPGrid_OnKeyPress;
+
             btnAdd.IsEnabled = false;
             btnDelete.IsEnabled = false;
+
 #if !FASTDEBUG
-            BtnRefresh_Click(null, null);
+            //BtnRefresh_Click(null, null);
 #endif
         }
 
@@ -145,6 +153,14 @@ namespace UPnPWin.Forms
         }
         private void BtnCancel_Click(object sender, RoutedEventArgs e)
         { MyNatDevice.Instance.CancelPendingRequests(); }
+
+        private void UPnPGrid_OnKeyPress(DataGrid sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Delete)
+            {  
+                BtnDelete_Click(sender, e);
+            }
+        }
 
         private List<Mapping> GetSelectedMappings(IList selection)
         {
