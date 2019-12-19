@@ -10,11 +10,13 @@ namespace UPnPWin.Utils
 {
     internal static class InputConstraints
     {
+        private static Regex m_regex = new Regex("[^0-9]+");
+        
         internal static void NumericTextbox(object sender, TextCompositionEventArgs e)
         {
-            Regex regex = new Regex("[^0-9]+");
-            e.Handled = regex.IsMatch(e.Text);
+            e.Handled = m_regex.IsMatch(e.Text);
         }
+        
         internal static bool EnsureBetween(int lower, int upper, int actual,
             string valueName = "", bool visible = true)
         {
