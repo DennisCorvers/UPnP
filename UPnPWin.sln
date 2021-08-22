@@ -5,8 +5,6 @@ VisualStudioVersion = 15.0.28307.1300
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UPnPWin", "UPnPWin\UPnPWin.csproj", "{4137453A-0172-41B3-A638-333B6D3DAF7B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Open.Nat", "..\Open.NAT\Open.Nat\Open.Nat.csproj", "{594F1F94-C190-4DF2-B89B-B4C5C596FE78}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -38,24 +36,6 @@ Global
 		{4137453A-0172-41B3-A638-333B6D3DAF7B}.Release|x64.Build.0 = Release|Any CPU
 		{4137453A-0172-41B3-A638-333B6D3DAF7B}.Release|x86.ActiveCfg = Release|Any CPU
 		{4137453A-0172-41B3-A638-333B6D3DAF7B}.Release|x86.Build.0 = Release|Any CPU
-		{594F1F94-C190-4DF2-B89B-B4C5C596FE78}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{594F1F94-C190-4DF2-B89B-B4C5C596FE78}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{594F1F94-C190-4DF2-B89B-B4C5C596FE78}.Debug|x64.ActiveCfg = Debug|x64
-		{594F1F94-C190-4DF2-B89B-B4C5C596FE78}.Debug|x64.Build.0 = Debug|x64
-		{594F1F94-C190-4DF2-B89B-B4C5C596FE78}.Debug|x86.ActiveCfg = Debug|x86
-		{594F1F94-C190-4DF2-B89B-B4C5C596FE78}.Debug|x86.Build.0 = Debug|x86
-		{594F1F94-C190-4DF2-B89B-B4C5C596FE78}.FastDebug|Any CPU.ActiveCfg = Debug|Any CPU
-		{594F1F94-C190-4DF2-B89B-B4C5C596FE78}.FastDebug|Any CPU.Build.0 = Debug|Any CPU
-		{594F1F94-C190-4DF2-B89B-B4C5C596FE78}.FastDebug|x64.ActiveCfg = Debug|x64
-		{594F1F94-C190-4DF2-B89B-B4C5C596FE78}.FastDebug|x64.Build.0 = Debug|x64
-		{594F1F94-C190-4DF2-B89B-B4C5C596FE78}.FastDebug|x86.ActiveCfg = Debug|x86
-		{594F1F94-C190-4DF2-B89B-B4C5C596FE78}.FastDebug|x86.Build.0 = Debug|x86
-		{594F1F94-C190-4DF2-B89B-B4C5C596FE78}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{594F1F94-C190-4DF2-B89B-B4C5C596FE78}.Release|Any CPU.Build.0 = Release|Any CPU
-		{594F1F94-C190-4DF2-B89B-B4C5C596FE78}.Release|x64.ActiveCfg = Release|x64
-		{594F1F94-C190-4DF2-B89B-B4C5C596FE78}.Release|x64.Build.0 = Release|x64
-		{594F1F94-C190-4DF2-B89B-B4C5C596FE78}.Release|x86.ActiveCfg = Release|x86
-		{594F1F94-C190-4DF2-B89B-B4C5C596FE78}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

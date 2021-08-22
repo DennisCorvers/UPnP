@@ -48,10 +48,11 @@ namespace UPnPWin.Forms
         private void FillMappings(List<MyNatMapping> mappings)
         {
             UPnPGrid.Items.Clear();
-            if (mappings == null) { return; }
+            if (mappings == null)
+                return;
 
             foreach (MyNatMapping map in mappings)
-            { UPnPGrid.Items.Add(map); }
+                UPnPGrid.Items.Add(map);
         }
 
         private async Task<MyNatDevice> GetDevice()
@@ -59,7 +60,9 @@ namespace UPnPWin.Forms
             if (!MyNatDevice.HasDevice)
             {
                 try
-                { await MyNatDevice.Instance.FindDevice(); }
+                {
+                    await MyNatDevice.Instance.FindDevice();
+                }
                 catch (NatDeviceNotFoundException)
                 {
                     MessageBox.Show(
@@ -74,14 +77,31 @@ namespace UPnPWin.Forms
                         "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     return null;
                 }
+                catch (MappingException e)
+                {
+                    switch (e.ErrorCode)
+                    {
+                        case 800:
+                            MessageBox.Show("UPnP is not enabled on your router.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                            break;
+
+                        default:
+                            MessageBox.Show($"Unknown error occured:\n{e.ErrorCode} {e.ErrorText}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                            break;
+                    }
+
+                    return null;
+                }
             }
             return MyNatDevice.Instance;
         }
         private async Task<List<MyNatMapping>> GetMappings()
         {
             try
-            { return await MyNatDevice.Instance.GetAllMappings(); }
-            catch (NatDeviceNotFoundException)
+            {
+                return await MyNatDevice.Instance.GetAllMappings();
+            }
+            catch
             {
                 MessageBox.Show(
                     "Unable to get UPnP mappings.\nNo NAT device available.",
@@ -91,7 +111,10 @@ namespace UPnPWin.Forms
         }
         private async Task<bool> RemoveMapping(List<Mapping> mappings)
         {
-            try { await MyNatDevice.Instance.RemoveMappings(mappings); }
+            try
+            {
+                await MyNatDevice.Instance.RemoveMappings(mappings);
+            }
             catch (NatDeviceNotFoundException)
             {
                 HandleNoNatDeviceException();
@@ -152,14 +175,14 @@ namespace UPnPWin.Forms
             }
         }
         private void BtnCancel_Click(object sender, RoutedEventArgs e)
-        { MyNatDevice.Instance.CancelPendingRequests(); }
+        {
+            MyNatDevice.Instance.CancelPendingRequests();
+        }
 
         private void UPnPGrid_OnKeyPress(DataGrid sender, KeyEventArgs e)
         {
             if (e.Key == Key.Delete)
-            {  
                 BtnDelete_Click(sender, e);
-            }
         }
 
         private List<Mapping> GetSelectedMappings(IList selection)
